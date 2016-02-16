@@ -10,7 +10,7 @@
 using namespace std;
 
 int main() {
-    for (auto &code : Codes::stocks)
+    for (auto &code : Codes::BVMStocks)
     {
         cout << code << endl;
     }

@@ -4,7 +4,7 @@
 
 #include "codes.h"
 
-const std::vector<std::string> Codes::stocks = {
+const std::vector<std::string> Codes::BVMStocks = {
         // Letter A
         "AC.MX",
         "ACCELSAB.MX",
@@ -21,12 +21,14 @@ const std::vector<std::string> Codes::stocks = {
         "ASURB.MX",
         "AUTLANB.MX",
         "AXTELCPO.MX",
+        "AZTECACPO.MX",
 
         // Letter B
         "BACHOCOB.MX",
         "BBVA.MX",
         "BIMBOA.MX",
         "BOLSAA.MX",
+        "BRTRAC10.MX",
 
         // Letter C
         "C.MX",
@@ -34,9 +36,12 @@ const std::vector<std::string> Codes::stocks = {
         "CEMEXCPO.MX",
         "CETETRCISHRS.MX",
         "CHDRAUIB.MX",
+        "CMRB.MX",
         "CHNTRAC11.MX",
         "CIEB.MX",
         "COMERCIUBC.MX",
+        "CONSTRU.MX",
         "CONSUMO10.MX",
-        "CONVERA.MX"
+        "CONVERA.MX",
+
 };
