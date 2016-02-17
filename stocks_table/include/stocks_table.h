@@ -2,8 +2,8 @@
 // Created by leind on 2/17/16.
 //
 
-#ifndef STOCKMARKETANALYSIS_TABLE_PRINTER_H
-#define STOCKMARKETANALYSIS_TABLE_PRINTER_H
+#ifndef STOCKMARKETANALYSIS_STOCKS_TABLE_H
+#define STOCKMARKETANALYSIS_STOCKS_TABLE_H
 
 #include <iostream>
 #include <iomanip>
@@ -99,4 +99,4 @@ namespace stocktable
 
 }
 
-#endif //STOCKMARKETANALYSIS_TABLE_PRINTER_H
+#endif //STOCKMARKETANALYSIS_STOCKS_TABLE_H

@@ -2,7 +2,7 @@
 // Created by leind on 2/17/16.
 //
 
-#include "table_printer.h"
+#include "stocks_table.h"
 
 namespace stocktable {
     TablePrinter::TablePrinter(std::ostream * output, const std::string & separator){
