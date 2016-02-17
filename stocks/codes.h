@@ -9,7 +9,7 @@
 
 class Codes {
 public:
-    static const std::vector<std::string> BVMStocks;
+    static const std::vector<std::string> BVMSymbols;
 };
 
 

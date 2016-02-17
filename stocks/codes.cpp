@@ -4,7 +4,7 @@
 
 #include "codes.h"
 
-const std::vector<std::string> Codes::BVMStocks = {
+const std::vector<std::string> Codes::BVMSymbols = {
         // Letter A
         "AC.MX",
         "ACCELSAB.MX",
