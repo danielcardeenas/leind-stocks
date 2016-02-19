@@ -24,11 +24,12 @@ int main()
 int runApiTest()
 {
     // all Yahoo! Finance quote types are implemented (this is just a sample)
-    std::string petr4Quotes = quote::getLatestQuotesCsv("BIMBOA.MX", {quote::QuoteType::symbol,
-                                                                     quote::QuoteType::name,
-                                                                     quote::QuoteType::lastTradePriceOnly,
-                                                                     quote::QuoteType::lastTradeDate,
-                                                                     quote::QuoteType::lastTradeTime});
+    std::string petr4Quotes = quote::getLatestQuotesCsv("BIMBOA.MX",
+                                                        {
+                                                                quote::QuoteType::symbol,
+                                                                quote::QuoteType::earningsShare,
+                                                                quote::QuoteType::peRatio,
+                                                        });
     std::cout << petr4Quotes << "\n" << std::endl;
     // quote ranges can be daily, weekly, monthly, or dividends only
     std::string petr4HistoricalPrices = quote::getHistoricalQuotesCsv("BIMBOA.MX",
