@@ -27,6 +27,7 @@
 namespace quote {
     //! \brief Historical data quote range types
     enum class RangeType {
+        quarterly, // q
         daily, // d
         weekly, // w
         monthly, // m

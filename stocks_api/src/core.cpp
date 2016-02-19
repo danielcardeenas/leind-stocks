@@ -58,7 +58,8 @@ namespace quote {
                     if (historicalQuotesCsv.empty() || historicalQuotesCsv.at(0) != '<') { // leading '<' indicates server error
                         return std::move(historicalQuotesCsv);
                     } else {
-                        throw exception::RuntimeException(__FILE__, __LINE__, __func__, "server (Yahoo! Finance) error");
+                        //throw exception::RuntimeException(__FILE__, __LINE__, __func__, "server (Yahoo! Finance) error");
+                        return "";
                     }
                 } else {
                     throw exception::LogicException(__FILE__, __LINE__, __func__, "empty instrument parameter");

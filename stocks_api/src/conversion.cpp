@@ -42,6 +42,8 @@ namespace quote {
                         return "m";
                     case RangeType::dividendsOnly:
                         return "v";
+                    case RangeType::quarterly:
+                        return "q";
                 }
                 throw exception::LogicException(__FILE__, __LINE__, __func__, "missing RangeType conversion");
             }
