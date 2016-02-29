@@ -15,6 +15,7 @@ std::vector<std::string> miniParseCSV(std::string&);
 double getCloseValue(std::string& str);
 
 int main() {
+    runTableTest();
     return 0;
 }
 
