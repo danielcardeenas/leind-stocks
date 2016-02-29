@@ -7,7 +7,6 @@
 
 #include <iostream>
 
-
 class stock {
 private:
     std::string _symbol;

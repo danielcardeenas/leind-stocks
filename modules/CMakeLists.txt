@@ -12,3 +12,4 @@ endif()
 
 add_subdirectory(cpr)
 add_subdirectory(json)
+add_subdirectory(stocks_table)

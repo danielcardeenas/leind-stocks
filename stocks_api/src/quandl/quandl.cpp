@@ -8,6 +8,4 @@ void leind::quandl::auth(std::string& authCode)
 {
     _authCode = authCode;
 }
-std::vector<stock> leind::quandl::getAllStocksFromDatabase(database::SupportedDatabase database)
-{
-}
+

@@ -6,17 +6,24 @@
 
 #include <iostream>
 #include <stocks_table.h>
+#include <cpr/api.h>
+#include <json.hpp>
 
-void runQuoteTests();
+using json = nlohmann::json;
+
 void runTableTest();
-std::string getThisQuarter(const std::string&);
-std::string getPastQuarter(const std::string&);
-std::vector<std::string> miniParseCSV(std::string&);
-double getCloseValue(std::string& str);
+void runCurlJsonTest();
 
 int main() {
     runTableTest();
+    runCurlJsonTest();
     return 0;
+}
+
+void runCurlJsonTest() {
+    auto response = cpr::Get(cpr::Url{"https://httpbin.org/get"});
+    auto json = json::parse(response.text);
+    std::cout << json.dump(4) << std::endl;
 }
 
 // Tests
