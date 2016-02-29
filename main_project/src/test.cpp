@@ -8,20 +8,35 @@
 #include <stocks_table.h>
 #include <cpr/api.h>
 #include <json.hpp>
-
-using json = nlohmann::json;
+#include <libstocks.h>
 
 void runTableTest();
 void runCurlJsonTest();
+int outputCurr();
+
+void runSymbolsTest();
+
+using json = nlohmann::json;
+using quandl = leind::quandl::core;
 
 int main() {
-    runTableTest();
-    runCurlJsonTest();
+    //runTableTest();
+    //runCurlJsonTest();
+    //outputCurr();
+    runSymbolsTest();
     return 0;
 }
 
+void runSymbolsTest() {
+    std::vector<std::string> symbols = leind::database::sf1::getAllSymbols();
+    for (auto &symbol : symbols) // access by reference to avoid copying
+    {
+        std::cout << symbol << std::endl;
+    }
+}
+
 void runCurlJsonTest() {
-    auto response = cpr::Get(cpr::Url{"https://httpbin.org/get"});
+    auto response = cpr::Get(cpr::Url{"https://api.myjson.com/bins/34m8d"}); // SF1/AAPL_EPS_MRQ
     auto json = json::parse(response.text);
     std::cout << json.dump(4) << std::endl;
 }

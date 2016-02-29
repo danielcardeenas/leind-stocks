@@ -1,5 +1,5 @@
 //
-// Created by playfulplay on 26/02/16.
+// Created by leind on 26/02/16.
 //
 
 #include "stock.h"
