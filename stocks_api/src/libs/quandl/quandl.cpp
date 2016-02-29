@@ -10,5 +10,4 @@ void leind::quandl::auth(std::string& authCode)
 }
 std::vector<stock> leind::quandl::getAllStocksFromDatabase(database::SupportedDatabase database)
 {
-
 }

@@ -9,7 +9,7 @@
 #include <vector>
 
 namespace database {
-    static const enum SupportedDatabase { SF1 };
+    enum SupportedDatabase { SF1 };
 
     class SF1 {
     public:

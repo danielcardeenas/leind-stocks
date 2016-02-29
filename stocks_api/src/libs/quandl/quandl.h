@@ -19,7 +19,7 @@ namespace leind
     public:
         void auth(std::string& authCode);
         std::string buildProxyAuth();
-        std::vector<stock> getAllStocksFromDatabase(SupportedDatabase database, );
+        std::vector<stock> getAllStocksFromDatabase(database::SupportedDatabase database);
     };
 
 }
