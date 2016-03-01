@@ -4,7 +4,7 @@
 
 #include <cpr/cprtypes.h>
 #include <cpr/api.h>
-#include "quandl.h"
+#include <quandl/quandl.h>
 
 leind::quandl::core::core() { }
 

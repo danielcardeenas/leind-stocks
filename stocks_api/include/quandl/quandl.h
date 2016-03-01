@@ -14,7 +14,8 @@ using json = nlohmann::json;
 
 namespace leind
 {
-    namespace quandl {
+    namespace quandl
+    {
 
         class core {
         private:

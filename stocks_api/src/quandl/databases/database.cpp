@@ -2,10 +2,10 @@
 // Created by playfulplay on 29/02/16.
 //
 
-#include "database.h"
 #include "utils.h"
 #include <fstream>
 #include <sstream>
+#include <quandl/databases/database.h>
 
 std::string _symbolsFile = "sf1_tickers.txt";
 std::string _symbolsUrl = "http://www.sharadar.com/meta/tickers.txt";

@@ -1,5 +1,5 @@
 //
-// Created by playfulplay on 29/02/16.
+// Created by leind on 29/02/16.
 //
 
 #ifndef STOCKMARKETANALYSIS_DATABASE_H
@@ -9,9 +9,10 @@
 #include <vector>
 #include <unistd.h>
 
-namespace leind {
-
-    namespace database {
+namespace leind
+{
+    namespace database
+    {
         // SF1 Database only features
         //============================
         class sf1 {

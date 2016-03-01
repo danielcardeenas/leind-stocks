@@ -6,25 +6,23 @@
 
 #include <iostream>
 #include <stocks_table.h>
-#include <cpr/api.h>
-#include <json.hpp>
 #include <libstocks.h>
+#include <cpr/cprtypes.h>
+#include <cpr/api.h>
 
 void runTableTest();
-void runCurlJsonTest();
 void runSymbolsTest();
-void runCurlTest();
 void runQuandlTest();
+void CAnalysis();
 
 using json = nlohmann::json;
 using quandl = leind::quandl::core;
 
 int main() {
     //runTableTest();
-    //runCurlJsonTest();
     //runSymbolsTest();
-    //runCurlTest();
-    runQuandlTest();
+    //runQuandlTest();
+    CAnalysis();
     return 0;
 }
 
@@ -36,24 +34,33 @@ void runQuandlTest()
     std::cout << json.dump(4) << std::endl;
 }
 
-void runCurlTest()
+void CAnalysis()
 {
-    auto response = cpr::Get(cpr::Url{"http://www.sharadar.com/meta/tickers.txt"});
-    std::cout << response.text << std::endl;
+    auto response = cpr::Get(cpr::Url{"https://api.myjson.com/bins/34m8d"}); // SF1/AAPL_EPS_MRQ
+    auto json = json::parse(response.text);
+
+    //std::cout << json["dataset"]["data"] << std::endl;
+
+    int i = 0;
+    for (auto element : json["dataset"]["data"][0]) {
+        std::cout << element << std::endl;
+        i++;
+    }
+
+    i = 0;
+    for (auto element : json["dataset"]["data"][4]) {
+        std::cout << element << std::endl;
+        i++;
+    }
 }
 
-void runSymbolsTest() {
+void runSymbolsTest()
+{
     std::vector<std::string> symbols = leind::database::sf1::getAllSymbols();
     for (auto &symbol : symbols) // access by reference to avoid copying
     {
         std::cout << symbol << std::endl;
     }
-}
-
-void runCurlJsonTest() {
-    auto response = cpr::Get(cpr::Url{"https://api.myjson.com/bins/34m8d"}); // SF1/AAPL_EPS_MRQ
-    auto json = json::parse(response.text);
-    std::cout << json.dump(4) << std::endl;
 }
 
 // Tests
