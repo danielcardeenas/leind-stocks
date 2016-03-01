@@ -17,6 +17,7 @@ namespace leind {
         class sf1 {
         private:
             static std::string getFilePath();
+            static std::string getFileFromWeb();
 
         public:
             static std::vector<std::string> getAllSymbols();

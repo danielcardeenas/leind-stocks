@@ -7,7 +7,10 @@
 
 #include <iostream>
 #include <vector>
+#include <json.hpp>
 #include "stock.h"
+
+using json = nlohmann::json;
 
 namespace leind
 {
@@ -15,11 +18,14 @@ namespace leind
 
         class core {
         private:
-            std::string _authCode;
-            std::string baseUrl = "https://www.quandl.com/api/v3/datasets/";
+            std::string _authCode = "";
+            std::string _baseUrl = "https://www.quandl.com/api/v3/datasets/";
         public:
-            void auth(std::string& authCode);
-            std::string buildProxyAuth();
+            core();
+
+            void auth(std::string authCode);
+            std::string request(std::string code);
+            std::string buildRequestUrl(std::string& code);
         };
     }
 

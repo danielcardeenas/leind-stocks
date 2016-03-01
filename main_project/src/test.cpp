@@ -12,9 +12,9 @@
 
 void runTableTest();
 void runCurlJsonTest();
-int outputCurr();
-
 void runSymbolsTest();
+void runCurlTest();
+void runQuandlTest();
 
 using json = nlohmann::json;
 using quandl = leind::quandl::core;
@@ -22,9 +22,24 @@ using quandl = leind::quandl::core;
 int main() {
     //runTableTest();
     //runCurlJsonTest();
-    //outputCurr();
-    runSymbolsTest();
+    //runSymbolsTest();
+    //runCurlTest();
+    runQuandlTest();
     return 0;
+}
+
+void runQuandlTest()
+{
+    quandl q;
+    q.auth("qsoHq8dWs24kyT8pEDSy");
+    auto json = json::parse(q.request("WIKI/FB"));
+    std::cout << json.dump(4) << std::endl;
+}
+
+void runCurlTest()
+{
+    auto response = cpr::Get(cpr::Url{"http://www.sharadar.com/meta/tickers.txt"});
+    std::cout << response.text << std::endl;
 }
 
 void runSymbolsTest() {
