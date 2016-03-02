@@ -6,6 +6,7 @@
 #define STOCKMARKETANALYSIS_LIBSTOCKS_H
 
 #include <quandl/quandl.h>
+#include <quandl/response.h>
 #include <quandl/databases/database.h>
 
 #endif //STOCKMARKETANALYSIS_LIBSTOCKS_H

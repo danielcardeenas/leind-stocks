@@ -16,7 +16,6 @@ namespace leind
 {
     namespace quandl
     {
-
         class core {
         private:
             std::string _authCode = "";

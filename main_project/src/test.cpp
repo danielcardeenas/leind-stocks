@@ -9,6 +9,7 @@
 #include <libstocks.h>
 #include <cpr/cprtypes.h>
 #include <cpr/api.h>
+#include "model/quarter.h"
 
 void runTableTest();
 void runSymbolsTest();
@@ -39,19 +40,14 @@ void CAnalysis()
     auto response = cpr::Get(cpr::Url{"https://api.myjson.com/bins/34m8d"}); // SF1/AAPL_EPS_MRQ
     auto json = json::parse(response.text);
 
-    //std::cout << json["dataset"]["data"] << std::endl;
+    t_quarter thisQuarter = buildQuarter(json["dataset"]["data"][0]);
+    t_quarter lastYearQuarter = buildQuarter(json["dataset"]["data"][4]);
 
-    int i = 0;
-    for (auto element : json["dataset"]["data"][0]) {
-        std::cout << element << std::endl;
-        i++;
-    }
+    double diff = thisQuarter.second - lastYearQuarter.second;
+    diff = (diff / lastYearQuarter.second) * 100;
 
-    i = 0;
-    for (auto element : json["dataset"]["data"][4]) {
-        std::cout << element << std::endl;
-        i++;
-    }
+    std::cout << diff << std::endl;
+
 }
 
 void runSymbolsTest()
