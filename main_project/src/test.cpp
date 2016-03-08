@@ -6,15 +6,15 @@
 
 #include <iostream>
 #include <stocks_table.h>
-#include <libstocks.h>
-#include <cpr/cprtypes.h>
-#include <cpr/api.h>
-#include "model/quarter.h"
+#include <json.hpp>
+
+#include <quandl/quandl.h>
+#include <quandl/databases/database.h>
+#include "canslim/canslim.h"
 
 void runTableTest();
 void runSymbolsTest();
 void runQuandlTest();
-void CAnalysis();
 
 using json = nlohmann::json;
 using quandl = leind::quandl::core;
@@ -23,7 +23,8 @@ int main() {
     //runTableTest();
     //runSymbolsTest();
     //runQuandlTest();
-    CAnalysis();
+    std::cout << "C analysis:" << canslim::CAnalysis(false) << std::endl << std::endl;
+    std::cout << "A analysis:" << canslim::AAnalysis(false, false) << std::endl << std::endl;
     return 0;
 }
 
@@ -33,21 +34,6 @@ void runQuandlTest()
     q.auth("qsoHq8dWs24kyT8pEDSy");
     auto json = json::parse(q.request("WIKI/FB"));
     std::cout << json.dump(4) << std::endl;
-}
-
-void CAnalysis()
-{
-    auto response = cpr::Get(cpr::Url{"https://api.myjson.com/bins/34m8d"}); // SF1/AAPL_EPS_MRQ
-    auto json = json::parse(response.text);
-
-    t_quarter thisQuarter = buildQuarter(json["dataset"]["data"][0]);
-    t_quarter lastYearQuarter = buildQuarter(json["dataset"]["data"][4]);
-
-    double diff = thisQuarter.second - lastYearQuarter.second;
-    diff = (diff / lastYearQuarter.second) * 100;
-
-    std::cout << diff << std::endl;
-
 }
 
 void runSymbolsTest()

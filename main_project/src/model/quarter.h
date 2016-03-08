@@ -7,29 +7,40 @@
 
 #include <iostream>
 
-typedef std::pair<std::string, double> t_quarter;
+struct data_stock {
+    std::string date;
+    double value;
 
-/*
- * Receives json array:
- * ["YYYY-MM-DD", 1.93]
- *
- * @returns: <string, double> pair
- * */
-template <typename T>
-t_quarter buildQuarter(T json)
-{
-    t_quarter quarter;
-    int i = 0;
-    for (auto element : json) {
-        if (i == 0)
-            quarter.first = element;
-        else
-            quarter.second = element;
+    /*
+     * Constructor:
+     * Receives json array:
+     * ["YYYY-MM-DD", 1.93]
+     *
+     * @returns: <string, double> pair
+     * */
+    template <typename T>
+    data_stock(T json) {
+        int i = 0;
+        for (auto element : json) {
+            if (i == 0)
+                date = element;
+            else
+                value = element;
 
-        i++;
+            i++;
+        }
     }
 
-    return quarter;
+    friend bool operator < (const data_stock& x, const data_stock& y);
+    friend bool operator > (const data_stock& x, const data_stock& y);
+};
+
+bool operator < (const data_stock& x, const data_stock& y) {
+    return x.value < y.value;
+}
+
+bool operator > (const data_stock& x, const data_stock& y) {
+    return x.value > y.value;
 }
 
 #endif //STOCKMARKETANALYSIS_QUARTER_H
