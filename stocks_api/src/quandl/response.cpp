@@ -1,5 +1,5 @@
 //
-// Created by playfulplay on 01/03/16.
+// Created by leind on 01/03/16.
 //
 
 #include "quandl/response.h"
