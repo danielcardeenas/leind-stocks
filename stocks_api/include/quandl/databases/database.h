@@ -9,6 +9,8 @@
 #include <vector>
 #include <unistd.h>
 
+#include "../../stock.h"
+
 namespace leind
 {
     namespace database
@@ -22,6 +24,7 @@ namespace leind
 
         public:
             static std::vector<std::string> getAllSymbols();
+            static std::vector<Stock> getAllStocks();
         };
     }
 }

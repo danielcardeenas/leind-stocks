@@ -7,19 +7,23 @@
 
 #include <iostream>
 
-class stock {
+class Stock {
 private:
     std::string _symbol;
     std::string _name;
+    std::string _sector;
+    std::string _industry;
 
 public:
     // Ctors
-    stock(std::string symbol): _symbol(symbol) {}
-    stock(std::string symbol, std::string name): _symbol(symbol), _name(name) {}
+    Stock();
+    Stock(std::string symbol, std::string name, std::string sector, std::string industry): _symbol(symbol), _name(name), _sector(sector), _industry(industry) {}
 
     // Methods
     std::string getName();
     std::string getSymbol();
+    std::string getSector();
+    std::string getIndustry();
 };
 
 

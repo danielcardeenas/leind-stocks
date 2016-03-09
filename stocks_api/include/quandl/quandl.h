@@ -25,7 +25,9 @@ namespace leind
 
             void auth(std::string authCode);
             std::string request(std::string code);
+            std::string request(std::string code, std::string startDate, std::string endDate);
             std::string buildRequestUrl(std::string& code);
+            std::string buildRequestUrl(std::string& code, std::string& startDate, std::string& endDate);
         };
     }
 

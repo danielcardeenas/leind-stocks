@@ -3,8 +3,57 @@
 //
 
 #include "canslim.h"
-#include "utils.h"
-#include "../model/quarter.h"
+#include "../utils.h"
+#include "../model/data_stock.h"
+
+using quandl = leind::quandl::core;
+
+// Returns increase in % of current ROE from last year's
+double canslim::roeIncrease()
+{
+    // Fetch data
+    // ===================================================================
+    auto response = cpr::Get(cpr::Url{"https://api.myjson.com/bins/3gxlh"}); // SF1/AAPL_ROE_MRT
+    auto json = json::parse(response.text);
+
+    // Set data
+    // ===================================================================
+    data_stock lastYear(json["dataset"]["data"][4]);
+    data_stock thisYear(json["dataset"]["data"][0]);
+
+    return utils::diferentialIncrease(lastYear.value, thisYear.value);
+}
+
+// Returns increase in % of current Free cash flow [FCF] against EPS
+double canslim::cashFlowAgainstEPSIncrease()
+{
+    //auto response = cpr::Get(cpr::Url{"https://api.myjson.com/bins/4ql45"}); // SF1/AAPL_FCF_MRY
+
+    auto response = cpr::Get(cpr::Url{"https://api.myjson.com/bins/4p33p"}); // SF1/AAPL_FCFPS_MRY
+    auto json = json::parse(response.text);
+    data_stock cashFlowPerShare(json["dataset"]["data"][0]);
+
+    response = cpr::Get(cpr::Url{"https://api.myjson.com/bins/4ma0t"}); // SF1/AAPL_EPS_MRY
+    json = json::parse(response.text);
+    data_stock currentEPS(json["dataset"]["data"][0]);
+
+    return utils::diferentialIncrease(currentEPS.value, cashFlowPerShare.value);
+}
+
+// Very similar to cashFlowEPS against EPS, but this one is used in Quarerly analysis
+// From: Inestopedia.com
+bool canslim::isQualityStock()
+{
+    auto response = cpr::Get(cpr::Url{"https://api.myjson.com/bins/4ttml"}); // SF1/AAPL_FCFPS_MRQ
+    auto json = json::parse(response.text);
+    data_stock cashFlowPerShare(json["dataset"]["data"][0]);
+
+    response = cpr::Get(cpr::Url{"https://api.myjson.com/bins/34m8d"}); // SF1/AAPL_EPS_MRQ
+    json = json::parse(response.text);
+    data_stock currentEPS(json["dataset"]["data"][0]);
+
+    return cashFlowPerShare > currentEPS;
+}
 
 bool canslim::CAnalysis(bool useAccelerating, bool useQualityStock)
 {
@@ -115,49 +164,50 @@ bool canslim::AAnalysis(bool useFiveYears, bool useReturnOfEquity, bool useCashF
     return true;
 }
 
-// Returns increase in % of current ROE from last year's
-double canslim::roeIncrease()
+// Supply and demand
+bool canslim::SAnalysis(std::string stock)
 {
+    std::cout << "S Analysis:" << std::endl;
+
     // Fetch data
     // ===================================================================
-    auto response = cpr::Get(cpr::Url{"https://api.myjson.com/bins/3gxlh"}); // SF1/AAPL_ROE_MRT
-    auto json = json::parse(response.text);
+    quandl q;
+    q.auth("qsoHq8dWs24kyT8pEDSy");
+    auto json = json::parse(q.request(
+                        "WIKI/" + stock,
+                        utils::dateToString(utils::addDays(utils::getNow(), -50)),
+                        utils::dateToString(utils::getNow())
+                        ));
 
     // Set data
     // ===================================================================
-    data_stock lastYear(json["dataset"]["data"][4]);
-    data_stock thisYear(json["dataset"]["data"][0]);
+    std::vector<data_stock> stocks;
+    int dataSize = json["dataset"]["data"].size();
 
-    return utils::diferentialIncrease(lastYear.value, thisYear.value);
-}
+    // Used to calculate the average trading volume over the last 50 days
+    double lastDaysVol = 0.0;
 
-// Returns increase in % of current Free cash flow [FCF] against EPS
-double canslim::cashFlowAgainstEPSIncrease()
-{
-    //auto response = cpr::Get(cpr::Url{"https://api.myjson.com/bins/4ql45"}); // SF1/AAPL_FCF_MRY
+    for (int i = 0; i < dataSize; ++i)
+    {
+        data_stock storeStock(json["dataset"]["data"][i], ValueProperty::Volume);
+        stocks.push_back(storeStock);
 
-    auto response = cpr::Get(cpr::Url{"https://api.myjson.com/bins/4p33p"}); // SF1/AAPL_FCFPS_MRY
-    auto json = json::parse(response.text);
-    data_stock cashFlowPerShare(json["dataset"]["data"][0]);
+        // Ignore the first value
+        if (i > 0)
+            lastDaysVol += storeStock.value;
+    }
 
-    response = cpr::Get(cpr::Url{"https://api.myjson.com/bins/4ma0t"}); // SF1/AAPL_EPS_MRY
-    json = json::parse(response.text);
-    data_stock currentEPS(json["dataset"]["data"][0]);
+    lastDaysVol = lastDaysVol / (dataSize - 1);
+    double increaseAverage50 = utils::diferentialIncrease(lastDaysVol, stocks[0].value);
+    if (abs(increaseAverage50) >= 50)
+    {
+        std::cout << "Big volume change: " << std::to_string(increaseAverage50) << std::endl;
+        return true;
+    }
+    else
+    {
+        std::cout << "Not big volume change: " << std::to_string(increaseAverage50) << std::endl;
+        return false;
+    }
 
-    return utils::diferentialIncrease(currentEPS.value, cashFlowPerShare.value);
-}
-
-// Very similar to cashFlowEPS against EPS, but this one is used in Quarerly analysis
-// From: Inestopedia.com
-bool canslim::isQualityStock()
-{
-    auto response = cpr::Get(cpr::Url{"https://api.myjson.com/bins/4ttml"}); // SF1/AAPL_FCFPS_MRQ
-    auto json = json::parse(response.text);
-    data_stock cashFlowPerShare(json["dataset"]["data"][0]);
-
-    response = cpr::Get(cpr::Url{"https://api.myjson.com/bins/34m8d"}); // SF1/AAPL_EPS_MRQ
-    json = json::parse(response.text);
-    data_stock currentEPS(json["dataset"]["data"][0]);
-
-    return cashFlowPerShare > currentEPS;
 }

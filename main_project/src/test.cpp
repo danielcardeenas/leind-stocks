@@ -3,7 +3,6 @@
  * I'm the visual, the inspiration
  * Who made the lady sing the blues
  * */
-
 #include <iostream>
 #include <stocks_table.h>
 #include <json.hpp>
@@ -11,10 +10,13 @@
 #include <quandl/quandl.h>
 #include <quandl/databases/database.h>
 #include "canslim/canslim.h"
+#include "utils.h"
 
+void runDateTests();
 void runTableTest();
 void runSymbolsTest();
 void runQuandlTest();
+void runStocksTest();
 
 using json = nlohmann::json;
 using quandl = leind::quandl::core;
@@ -23,8 +25,17 @@ int main() {
     //runTableTest();
     //runSymbolsTest();
     //runQuandlTest();
-    std::cout << canslim::CAnalysis(false, true) << std::endl;
-    std::cout << canslim::AAnalysis(false, false, true) << std::endl;
+    //runStocksTest();
+    //runDateTests();
+    //std::cout << canslim::CAnalysis(false, true) << std::endl;
+    //std::cout << canslim::AAnalysis(false, false, true) << std::endl;
+    std::cout << canslim::SAnalysis("AAPL") << std::endl;
+}
+
+void runDateTests()
+{
+    std::cout << utils::dateToString(utils::getNow()) << std::endl;
+    std::cout << utils::dateToString(utils::addDays(utils::getNow(), -30)) << std::endl;
 }
 
 void runQuandlTest()
@@ -41,6 +52,15 @@ void runSymbolsTest()
     for (auto &symbol : symbols) // access by reference to avoid copying
     {
         std::cout << symbol << std::endl;
+    }
+}
+
+void runStocksTest()
+{
+    std::vector<Stock> stocks = leind::database::sf1::getAllStocks();
+    for (auto &stock : stocks) // access by reference to avoid copying
+    {
+        std::cout << stock.getName() << " - " << stock.getSector() << std::endl;
     }
 }
 

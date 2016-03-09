@@ -61,3 +61,37 @@ std::vector<std::string> leind::database::sf1::getAllSymbols()
 
     return allSymbols;
 }
+
+// Public functions
+// =============================================================
+std::vector<Stock> leind::database::sf1::getAllStocks()
+{
+    std::ifstream file(getFileFromWeb());
+    std::string line;
+    std::vector<Stock> allSymbols;
+
+    std::string _ticker;
+    std::string _name;
+    std::string _cusip;
+    std::string _isin;
+    std::string _currency;
+    std::string _sector;
+    std::string _industry;
+
+    while(std::getline(file, line))
+    {
+        std::stringstream linestream(line);
+        std::getline(linestream, _ticker, '\t');
+        std::getline(linestream, _name, '\t');
+        std::getline(linestream, _cusip, '\t');
+        std::getline(linestream, _isin, '\t');
+        std::getline(linestream, _currency, '\t');
+        std::getline(linestream, _sector, '\t');
+        std::getline(linestream, _industry, '\t');
+
+        Stock stock(_ticker, _name, _sector, _industry);
+        allSymbols.push_back(stock);
+    }
+
+    return allSymbols;
+}

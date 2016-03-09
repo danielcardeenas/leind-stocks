@@ -6,7 +6,7 @@ include_directories(../modules/stocks_table/include)
 include_directories(${CPR_INCLUDE_DIRS})
 include_directories(${JSON_INCLUDE_DIRS})
 
-set(SOURCE_FILES src/test.cpp src/canslim/canslim.h src/model/quarter.h src/canslim/utils.h src/canslim/canslim.cpp)
+set(SOURCE_FILES src/test.cpp src/canslim/canslim.h src/model/data_stock.h src/utils.h src/utils.cpp src/canslim/canslim.cpp)
 
 add_executable(StockMarketAnalysis ${SOURCE_FILES})
 target_link_libraries(StockMarketAnalysis stocksApi stocksTable ${CPR_LIBRARIES})

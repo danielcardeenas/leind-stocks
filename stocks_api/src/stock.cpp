@@ -4,12 +4,22 @@
 
 #include "stock.h"
 
-std::string stock::getName()
+std::string Stock::getName()
 {
     return _name;
 }
 
-std::string stock::getSymbol()
+std::string Stock::getSymbol()
 {
     return _symbol;
+}
+
+std::string Stock::getSector()
+{
+    return _sector;
+}
+
+std::string Stock::getIndustry()
+{
+    return _industry;
 }
