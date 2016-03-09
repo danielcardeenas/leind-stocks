@@ -8,7 +8,7 @@
 
 bool canslim::CAnalysis(bool useAccelerating, bool useQualityStock)
 {
-    std::cout << std::endl;
+    std::cout << "C Analysis:" << std::endl;
 
     auto response = cpr::Get(cpr::Url{"https://api.myjson.com/bins/34m8d"}); // SF1/AAPL_EPS_MRQ
     auto json = json::parse(response.text);
@@ -47,7 +47,7 @@ bool canslim::CAnalysis(bool useAccelerating, bool useQualityStock)
 
 bool canslim::AAnalysis(bool useFiveYears, bool useReturnOfEquity, bool useCashFlow)
 {
-    std::cout << std::endl;
+    std::cout << "A Analysis:" << std::endl;
 
     // Fetch data
     // ===================================================================

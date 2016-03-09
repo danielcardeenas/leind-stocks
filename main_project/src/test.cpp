@@ -23,9 +23,8 @@ int main() {
     //runTableTest();
     //runSymbolsTest();
     //runQuandlTest();
-    std::cout << "C analysis:" << canslim::CAnalysis(false, true) << std::endl << std::endl;
-    std::cout << "A analysis:" << canslim::AAnalysis(false, false, true) << std::endl << std::endl;
-    return 0;
+    std::cout << canslim::CAnalysis(false, true) << std::endl;
+    std::cout << canslim::AAnalysis(false, false, true) << std::endl;
 }
 
 void runQuandlTest()
