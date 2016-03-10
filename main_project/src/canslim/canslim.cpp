@@ -165,7 +165,7 @@ bool canslim::AAnalysis(bool useFiveYears, bool useReturnOfEquity, bool useCashF
 }
 
 // Supply and demand
-bool canslim::SAnalysis(std::string stock)
+bool canslim::SAnalysis(Stock stock)
 {
     std::cout << "S Analysis:" << std::endl;
 
@@ -199,7 +199,7 @@ bool canslim::SAnalysis(std::string stock)
 
     lastDaysVol = lastDaysVol / (dataSize - 1);
     double increaseAverage50 = utils::diferentialIncrease(lastDaysVol, stocks[0].value);
-    if (abs(increaseAverage50) >= 50)
+    if (std::abs(increaseAverage50) >= 50)
     {
         std::cout << "Big volume change: " << std::to_string(increaseAverage50) << std::endl;
         return true;
@@ -209,5 +209,11 @@ bool canslim::SAnalysis(std::string stock)
         std::cout << "Not big volume change: " << std::to_string(increaseAverage50) << std::endl;
         return false;
     }
+
+}
+
+// Laggard or leader
+bool canslim::LAnalysis()
+{
 
 }

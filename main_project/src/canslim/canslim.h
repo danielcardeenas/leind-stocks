@@ -28,8 +28,14 @@ namespace canslim
     // if useFiveYears = false, check only 3 years
     bool AAnalysis(bool useFiveYears = false, bool useReturnOfEquity = false, bool useCashFlow = false);
 
+    //There is no
+    //bool NAnalysis();
+
     // Supply and demand
     bool SAnalysis(std::string stock);
+
+    // Leader or laggard
+    bool LAnalysis();
 }
 
 #endif //STOCKMARKETANALYSIS_CANSLIM_H
