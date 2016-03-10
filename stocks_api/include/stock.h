@@ -24,6 +24,9 @@ public:
     std::string getSymbol();
     std::string getSector();
     std::string getIndustry();
+
+    // Operators
+    bool operator ==(const Stock& rhs) const { return this->_symbol == rhs._symbol;}
 };
 
 

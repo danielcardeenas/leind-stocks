@@ -29,7 +29,7 @@ int main() {
     //runDateTests();
     //std::cout << canslim::CAnalysis(false, true) << std::endl;
     //std::cout << canslim::AAnalysis(false, false, true) << std::endl;
-    std::cout << canslim::SAnalysis("AAPL") << std::endl;
+    //std::cout << canslim::SAnalysis("AAPL") << std::endl;
 }
 
 void runDateTests()
@@ -48,11 +48,13 @@ void runQuandlTest()
 
 void runSymbolsTest()
 {
-    std::vector<std::string> symbols = leind::database::sf1::getAllSymbols();
+    std::vector<std::string> symbols = leind::database::wiki::getAllSymbols();
     for (auto &symbol : symbols) // access by reference to avoid copying
     {
         std::cout << symbol << std::endl;
     }
+
+    std::cout << symbols.size() << std::endl;
 }
 
 void runStocksTest()

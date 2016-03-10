@@ -19,12 +19,29 @@ namespace leind
         //============================
         class sf1 {
         private:
+            static std::string _symbolsFile;
+            static std::string _symbolsUrl;
+
             static std::string getFilePath();
             static std::string getFileFromWeb();
 
         public:
             static std::vector<std::string> getAllSymbols();
             static std::vector<Stock> getAllStocks();
+        };
+
+        // WIKI Database only features
+        //============================
+        class wiki {
+        private:
+            static std::string _symbolsFile;
+            static std::string _symbolsUrl;
+
+            static std::string getFilePath();
+            static std::string getFileFromWeb();
+
+        public:
+            static std::vector<std::string> getAllSymbols();
         };
     }
 }

@@ -165,17 +165,17 @@ bool canslim::AAnalysis(bool useFiveYears, bool useReturnOfEquity, bool useCashF
 }
 
 // Supply and demand
-bool canslim::SAnalysis(Stock stock)
+bool canslim::SAnalysis(std::string stock)
 {
     std::cout << "S Analysis:" << std::endl;
 
     // Look if the stock is in the database SF1 because we are looking it in another database
     std::vector<std::string> symbols = leind::database::sf1::getAllSymbols();
-    if (!(std::find(symbols.begin(), symbols.end(), stock) != symbols.end()))
-    {
-        std::cout << stock << " - " << "Stock not in database" << std::endl;
-        return false;
-    }
+    //if (!(std::find(symbols.begin(), symbols.end(), stock) != symbols.end()))
+    //{
+    //    std::cout << stock << " - " << "Stock not in database" << std::endl;
+    //    return false;
+    //}
 
     // Fetch data
     // ===================================================================
