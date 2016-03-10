@@ -6,6 +6,7 @@
 #define STOCKMARKETANALYSIS_CANSLIM_H
 
 #include <iostream>
+#include <algorithm>
 #include <libstocks.h>
 #include <cpr/api.h>
 #include <quandl/quandl.h>
