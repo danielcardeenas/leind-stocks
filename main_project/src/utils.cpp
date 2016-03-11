@@ -45,3 +45,11 @@ struct tm* utils::addDays(struct tm* date, int days)
 
     return newDate;
 }
+
+std::string utils::buildMajorHoldersQuery(std::string stockSymbol)
+{
+    std::string query = "https://api.import.io/store/connector/b4c82ce2-a2de-4460-9c98-74f214d2bb46/_query?input=webpage/url:https%3A%2F%2Ffinance.yahoo.com%2Fq%2Fmh%3Fs%3D"
+    + stockSymbol + "&&_apikey=506841ffeb29443699a16cfc39f7de4553744839a0d2766b1bc06bc73f091186389edc8f697c1b8b0f9e29437c6c55344b84300b84ae94ab1a62e892a20e165b68f0e9de7708acfa79f768f79bd3756e";
+
+    return query;
+}

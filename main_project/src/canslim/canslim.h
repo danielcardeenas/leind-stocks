@@ -37,6 +37,9 @@ namespace canslim
 
     // Leader or laggard
     bool LAnalysis();
+
+    // Institutions holding
+    bool IAnalysis(Stock stock);
 }
 
 #endif //STOCKMARKETANALYSIS_CANSLIM_H

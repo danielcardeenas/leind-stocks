@@ -170,12 +170,12 @@ bool canslim::SAnalysis(std::string stock)
     std::cout << "S Analysis:" << std::endl;
 
     // Look if the stock is in the database SF1 because we are looking it in another database
-    std::vector<std::string> symbols = leind::database::sf1::getAllSymbols();
-    //if (!(std::find(symbols.begin(), symbols.end(), stock) != symbols.end()))
-    //{
-    //    std::cout << stock << " - " << "Stock not in database" << std::endl;
-    //    return false;
-    //}
+    std::vector<std::string> symbols = leind::database::wiki::getAllSymbols();
+    if (!(std::find(symbols.begin(), symbols.end(), stock) != symbols.end()))
+    {
+        std::cout << stock << " - " << "Stock not in database" << std::endl;
+        return false;
+    }
 
     // Fetch data
     // ===================================================================
@@ -220,8 +220,27 @@ bool canslim::SAnalysis(std::string stock)
 
 }
 
-// Laggard or leader
-bool canslim::LAnalysis()
+// Insitutions holding
+bool canslim::IAnalysis(Stock stock)
 {
+    std::cout << "I Analysis:" << std::endl;
 
+    // Fetch data
+    // This one uses Yahoo finance info
+    // Data scraped with Import.io
+    // ===================================================================
+    auto response = cpr::Get(cpr::Url{utils::buildMajorHoldersQuery(stock.getSymbol())});
+    auto json = json::parse(response.text);
+
+    // Set data
+    // ===================================================================
+    stock.setMajorHoldersData(json["results"][0]["data"]);
+
+    // Uncomment to verify results
+    //std::cout << stock.getPercentHeldByOwners() << std::endl;
+    //std::cout << stock.getPercentHeldByInstitutions() << std::endl;
+    //std::cout << stock.getPercentFloatHeldByInstitutions() << std::endl;
+    //std::cout << stock.getNumberOfInstitutionsHolding() << std::endl;
+
+    
 }

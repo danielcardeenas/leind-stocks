@@ -9,7 +9,7 @@
 
 namespace utils {
     // Calculationis
-    //=============================================================
+    // ============================================================
 
     // Returns increase in %
     double diferentialIncrease(double past, double current);
@@ -17,7 +17,7 @@ namespace utils {
 
     // Dates managment stuff.
     // DO NOT TOUCH THIS IS SACRED
-    //=============================================================
+    // ============================================================
 
     // Returns now's time
     struct tm* getNow();
@@ -27,6 +27,13 @@ namespace utils {
 
     // Adds number of days to current date
     struct tm* addDays(struct tm* date, int days);
+
+    // CANSLIM related
+    // ============================================================
+
+    // Yahoo Finance web scrap using Import.io
+    // Returns the url who gets the major holders info
+    std::string buildMajorHoldersQuery(std::string stock);
 }
 
 #endif //STOCKMARKETANALYSIS_UTILS_H
