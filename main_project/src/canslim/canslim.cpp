@@ -55,6 +55,90 @@ bool canslim::isQualityStock()
     return cashFlowPerShare > currentEPS;
 }
 
+bool canslim::checkVolumeChanges(Stock& stock)
+{
+    // Look if the stock is in the database SF1 because we are looking it in another database
+    std::vector<std::string> symbols = leind::database::wiki::getAllSymbols();
+    if (!(std::find(symbols.begin(), symbols.end(), stock.getSymbol()) != symbols.end()))
+    {
+        std::cout << stock.getSymbol() << " - " << "Stock not in database" << std::endl;
+        return false;
+    }
+
+    // Volume changes over the last 50 days
+    // Fetch data
+    // ===================================================================
+    quandl q;
+    q.auth("qsoHq8dWs24kyT8pEDSy");
+    auto json = json::parse(q.request(
+                        "WIKI/" + stock.getSymbol(),
+                        utils::dateToString(utils::addDays(utils::getNow(), -51)),
+                        utils::dateToString(utils::getNow())
+                        ));
+
+    // Volume changes over the last 50 days
+    // Set data
+    // ===================================================================
+    std::vector<data_stock> stocks;
+    int dataSize = json["dataset"]["data"].size();
+
+    // Used to calculate the average trading volume over the last 50 days
+    double lastDaysVol = 0.0;
+
+    for (int i = 0; i < dataSize; ++i)
+    {
+        data_stock storeStock(json["dataset"]["data"][i], ValueProperty::Volume);
+        stocks.push_back(storeStock);
+
+        // Ignore the first value
+        if (i > 0)
+            lastDaysVol += storeStock.value;
+    }
+    lastDaysVol = lastDaysVol / (dataSize - 1);
+    double increaseAverage50 = utils::diferentialIncrease(lastDaysVol, stocks[0].value);
+
+    // Volume changes over the last 50 days
+    // Validate data
+    // ===================================================================
+    if (std::abs(increaseAverage50) >= 50)
+    {
+        std::cout << "Big volume change: " << std::to_string(increaseAverage50) << std::endl;
+        return true;
+    }
+    else
+    {
+        std::cout << "Not big volume change: " << std::to_string(increaseAverage50) << std::endl;
+        return false;
+    }
+}
+
+bool canslim::checkDebtoToEquity(Stock& stock)
+{
+    // Fetch data
+    // ===================================================================
+    auto response = cpr::Get(cpr::Url{"https://api.myjson.com/bins/420bn"}); // SF1/AAPL_DE_ARY
+    auto json = json::parse(response.text);
+
+    // Set data
+    // From last two years to current
+    // ===================================================================
+    data_stock actualDebt(json["dataset"]["data"][0]);
+    data_stock firstDebt(json["dataset"]["data"][1]);
+    data_stock secondDebt(json["dataset"]["data"][2]);
+
+    double averagePastDebt = (firstDebt.value + secondDebt.value) / (json["dataset"]["data"].size() - 1);
+    if (actualDebt.value < averagePastDebt)
+    {
+        std::cout << "Debt to equity ratio got lower!";
+        return true;
+    }
+    else
+    {
+        std::cout << "Debt to equity ratio got bigger!";
+        return false;
+    }
+}
+
 bool canslim::CAnalysis(bool useAccelerating, bool useQualityStock)
 {
     std::cout << "C Analysis:" << std::endl;
@@ -90,7 +174,7 @@ bool canslim::CAnalysis(bool useAccelerating, bool useQualityStock)
         else { std::cout << "Is NOT quality stock" << std::endl; return false; }
     }
 
-    if (diff < 25) { return false; }
+    if (diff >= 25) { return false; }
     else { return true; }
 }
 
@@ -164,59 +248,23 @@ bool canslim::AAnalysis(bool useFiveYears, bool useReturnOfEquity, bool useCashF
     return true;
 }
 
-// Supply and demand
-bool canslim::SAnalysis(std::string stock)
+// Supply and demand, reducing its debt as a percent of equity
+bool canslim::SAnalysis(Stock stock, bool useVolumeChanges, bool useDebtRatio)
 {
     std::cout << "S Analysis:" << std::endl;
 
-    // Look if the stock is in the database SF1 because we are looking it in another database
-    std::vector<std::string> symbols = leind::database::wiki::getAllSymbols();
-    if (!(std::find(symbols.begin(), symbols.end(), stock) != symbols.end()))
-    {
-        std::cout << stock << " - " << "Stock not in database" << std::endl;
-        return false;
-    }
+    bool isVolumeChanged = true;
+    bool isDebtReduced = true;
 
-    // Fetch data
-    // ===================================================================
-    quandl q;
-    q.auth("qsoHq8dWs24kyT8pEDSy");
-    auto json = json::parse(q.request(
-                        "WIKI/" + stock,
-                        utils::dateToString(utils::addDays(utils::getNow(), -50)),
-                        utils::dateToString(utils::getNow())
-                        ));
+    if (useVolumeChanges) { isVolumeChanged = canslim::checkVolumeChanges(stock); }
+    if (useDebtRatio) { isDebtReduced = canslim::checkDebtoToEquity(stock); }
 
-    // Set data
-    // ===================================================================
-    std::vector<data_stock> stocks;
-    int dataSize = json["dataset"]["data"].size();
+    return isVolumeChanged && isDebtReduced;
+}
 
-    // Used to calculate the average trading volume over the last 50 days
-    double lastDaysVol = 0.0;
-
-    for (int i = 0; i < dataSize; ++i)
-    {
-        data_stock storeStock(json["dataset"]["data"][i], ValueProperty::Volume);
-        stocks.push_back(storeStock);
-
-        // Ignore the first value
-        if (i > 0)
-            lastDaysVol += storeStock.value;
-    }
-
-    lastDaysVol = lastDaysVol / (dataSize - 1);
-    double increaseAverage50 = utils::diferentialIncrease(lastDaysVol, stocks[0].value);
-    if (std::abs(increaseAverage50) >= 50)
-    {
-        std::cout << "Big volume change: " << std::to_string(increaseAverage50) << std::endl;
-        return true;
-    }
-    else
-    {
-        std::cout << "Not big volume change: " << std::to_string(increaseAverage50) << std::endl;
-        return false;
-    }
+// Leader or laggard
+bool canslim::LAnalysis(Stock stock)
+{
 
 }
 
@@ -242,5 +290,5 @@ bool canslim::IAnalysis(Stock stock)
     //std::cout << stock.getPercentFloatHeldByInstitutions() << std::endl;
     //std::cout << stock.getNumberOfInstitutionsHolding() << std::endl;
 
-    
+    return true;
 }

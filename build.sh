@@ -2,7 +2,7 @@
 # Build and run script
 
 mkdir -p build && cd build/
-cmake ../ && make
+/usr/local/Cellar/cmake/3.5.0/bin/cmake ../ && make
 echo ""
 echo "-----------------------------------------"
 echo "Build succeed"
