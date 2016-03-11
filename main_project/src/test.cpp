@@ -30,7 +30,7 @@ int main() {
     //std::cout << canslim::CAnalysis(false, true) << std::endl;
     //std::cout << canslim::AAnalysis(false, false, true) << std::endl;
     //std::cout << canslim::SAnalysis("AAPL") << std::endl;
-    std::cout << canslim::IAnalysis(Stock("AMZN")) << std::endl;
+    std::cout << canslim::IAnalysis(Stock("AMZN", "Amazon")) << std::endl;
 }
 
 void runDateTests()
