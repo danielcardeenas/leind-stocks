@@ -139,6 +139,9 @@ bool canslim::checkDebtoToEquity(Stock& stock)
     }
 }
 
+// CANSLIM Call methods
+// ===========================================================================================================
+
 bool canslim::CAnalysis(bool useAccelerating, bool useQualityStock)
 {
     std::cout << "C Analysis:" << std::endl;
