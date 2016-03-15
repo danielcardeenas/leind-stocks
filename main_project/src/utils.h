@@ -28,6 +28,9 @@ namespace utils {
     // Adds number of days to current date
     struct tm* addDays(struct tm* date, int days);
 
+    // Adds number of months to current date
+    struct tm* addMonths(struct tm* date, int months);
+
     // CANSLIM related
     // ============================================================
 

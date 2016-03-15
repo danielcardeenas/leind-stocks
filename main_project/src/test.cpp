@@ -27,9 +27,9 @@ int main() {
     //runQuandlTest();
     //runStocksTest();
     //runDateTests();
-    std::cout << canslim::CAnalysis(false, true, true, true) << std::endl;
-    //std::cout << canslim::AAnalysis(true, false, true) << std::endl;
-    //std::cout << canslim::SAnalysis(Stock("MSFT"), false, true) << std::endl;
+    //std::cout << canslim::CAnalysis(false, true, true, true) << std::endl;
+    //std::cout << canslim::AAnalysis(false, false, true) << std::endl;
+    std::cout << canslim::SAnalysis(Stock("AAPL"), true, true) << std::endl;
     //std::cout << canslim::IAnalysis(Stock("AMZN")) << std::endl;
 }
 

@@ -21,6 +21,9 @@ private:
     double _percentFloatHeldByIntitutions;
     int _numberOfInstitutionsHolding;
 
+    // Table info
+    long long shares;
+
 public:
     // Ctors
     Stock();
@@ -49,6 +52,10 @@ public:
     void setPercentHeldByInstitutions(double _percentHeldByIntitutions);
     void setPercentFloatHeldByInstitutions(double _percentFloatHeldByIntitutions);
     void setNumberOfInstitutionsHolding(int _numberOfInstitutionsHolding);
+
+    long long getSharesQty();
+
+    void setSharesQty(long long shares);
 
     // Funcitons
     // =========================================================================

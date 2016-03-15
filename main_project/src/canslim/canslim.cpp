@@ -57,7 +57,7 @@ bool canslim::isQualityStock()
 
 bool canslim::checkVolumeChanges(Stock& stock)
 {
-    // Look if the stock is in the database SF1 because we are looking it in another database
+    // Look if the stock is in the database WIKI because we are looking it in another database
     std::vector<std::string> symbols = leind::database::wiki::getAllSymbols();
     if (!(std::find(symbols.begin(), symbols.end(), stock.getSymbol()) != symbols.end()))
     {
@@ -65,14 +65,14 @@ bool canslim::checkVolumeChanges(Stock& stock)
         return false;
     }
 
-    // Volume changes over the last 50 days
+    // Volume changes over the last 3 months
     // Fetch data
     // ===================================================================
     quandl q;
     q.auth("qsoHq8dWs24kyT8pEDSy");
     auto json = json::parse(q.request(
                         "WIKI/" + stock.getSymbol(),
-                        utils::dateToString(utils::addDays(utils::getNow(), -51)),
+                        utils::dateToString(utils::addMonths(utils::getNow(), -3)),
                         utils::dateToString(utils::getNow())
                         ));
 
@@ -83,9 +83,9 @@ bool canslim::checkVolumeChanges(Stock& stock)
     int dataSize = json["dataset"]["data"].size();
 
     // Used to calculate the average trading volume over the last 50 days
-    double lastDaysVol = 0.0;
+    long long lastDaysVol = 0;
 
-    for (int i = 0; i < dataSize; ++i)
+    for (int i = 1; i < dataSize; ++i)
     {
         data_stock storeStock(json["dataset"]["data"][i], ValueProperty::Volume);
         stocks.push_back(storeStock);
@@ -94,20 +94,23 @@ bool canslim::checkVolumeChanges(Stock& stock)
         if (i > 0)
             lastDaysVol += storeStock.value;
     }
-    lastDaysVol = lastDaysVol / (dataSize - 1);
-    double increaseAverage50 = utils::diferentialIncrease(lastDaysVol, stocks[0].value);
 
-    // Volume changes over the last 50 days
+    //for (int i = 0; i < dataSize; ++i) { std::cout << std::to_string(stocks[i].value) << " - " << stocks[i].date << std::endl; }
+
+    lastDaysVol = lastDaysVol / (dataSize - 1);
+    double increaseAverage90 = utils::diferentialIncrease(lastDaysVol, stocks[0].value);
+
+    // Volume changes over the last 3 months
     // Validate data
     // ===================================================================
-    if (std::abs(increaseAverage50) >= 50)
+    if (increaseAverage90 >= 40)
     {
-        std::cout << "Big volume change: " << std::to_string(increaseAverage50) << std::endl;
+        std::cout << "Big volume change: " << std::to_string(increaseAverage90) << std::endl;
         return true;
     }
     else
     {
-        std::cout << "Not big volume change: " << std::to_string(increaseAverage50) << std::endl;
+        std::cout << "Not big volume change: " << std::to_string(increaseAverage90) << std::endl;
         return false;
     }
 }
@@ -137,6 +140,12 @@ bool canslim::checkDebtoToEquity(Stock& stock)
         std::cout << "Debt to equity ratio got bigger!";
         return false;
     }
+}
+
+// TODO: implement this shit nigga
+bool canslim::checkBuyBack(Stock &stock)
+{
+    return true;
 }
 
 // CANSLIM Call methods
@@ -210,6 +219,8 @@ bool canslim::CAnalysis(bool useAccelerating, bool useAccelerating10, bool useSa
     // Search for sales increase over 25%
     if (useSalesGrowth)
     {
+        bool isEnoughSales = false;
+
         auto response = cpr::Get(cpr::Url{"https://api.myjson.com/bins/55r17"}); // SF1/AAPL_REVENUE_MRQ
         //auto response = cpr::Get(cpr::Url{"https://api.myjson.com/bins/4q3rf"}); // SF1/EFII_REVENUE_MRQ
         auto json = json::parse(response.text);
@@ -217,19 +228,27 @@ bool canslim::CAnalysis(bool useAccelerating, bool useAccelerating10, bool useSa
         data_stock thisQuarter(json["dataset"]["data"][0]);
         data_stock secondQuarter(json["dataset"]["data"][1]);
         data_stock thirdQuarter(json["dataset"]["data"][2]);
-        data_stock fourthQuarter(json["dataset"]["data"][3]);
-        data_stock priorQuarter(json["dataset"]["data"][4]);
+
+        if (utils::diferentialIncrease(secondQuarter.value, thisQuarter.value) >= 25)
+            isEnoughSales = true;
+
+
+        // If sales are not up to 25% check if at least accelerating over the last 3 quarters
+        if (!isEnoughSales)
+            isEnoughSales = thisQuarter > secondQuarter && secondQuarter > thirdQuarter;
 
         std::cout << utils::diferentialIncrease(secondQuarter.value, thisQuarter.value) << std::endl;
         std::cout << utils::diferentialIncrease(thirdQuarter.value, secondQuarter.value) << std::endl;
-        std::cout << utils::diferentialIncrease(fourthQuarter.value, thirdQuarter.value) << std::endl;
-        std::cout << utils::diferentialIncrease(priorQuarter.value, fourthQuarter.value) << std::endl;
+
+        if (isEnoughSales) { std::cout << "Enough sales!" << std::endl; }
+        else { std::cout << "NOT enough sales" << std::endl; return false; }
     }
 
     if (diffQuarters >= 25) { return true; }
     else { return false; }
 }
 
+// TODO: Earnings should be stable and consistent from year to year over the last three years
 bool canslim::AAnalysis(bool useFiveYears, bool useReturnOfEquity, bool useCashFlow)
 {
     std::cout << "A Analysis:" << std::endl;
@@ -283,7 +302,9 @@ bool canslim::AAnalysis(bool useFiveYears, bool useReturnOfEquity, bool useCashF
     if (slides > 1) { std::cout << "Too much slides" << std::endl; return false; }
 
     if (!(fifthToFourth && fourthToThird && thirdToSecond && secondToFirst))
-        return false;
+    {
+        std::cout << "Not enough primary annual growing" << std::endl;
+    }
 
     if (useReturnOfEquity)
     {
@@ -294,27 +315,32 @@ bool canslim::AAnalysis(bool useFiveYears, bool useReturnOfEquity, bool useCashF
     if (useCashFlow)
     {
         bool isEnoughCashFlow = canslim::cashFlowAgainstEPSIncrease() >= 20;
-        if (!isEnoughCashFlow) { std::cout << "Not enough Cashflow" << std::endl; return false; }
+        if (isEnoughCashFlow) { std::cout << "Enough Cashflow" << std::endl; }
+        else { std::cout << "Not enough Cashflow" << std::endl; return false; }
     }
 
     return true;
 }
 
 // Supply and demand, reducing its debt as a percent of equity
-bool canslim::SAnalysis(Stock stock, bool useVolumeChanges, bool useDebtRatio)
+// TODO: Pick the ones with less shares
+bool canslim::SAnalysis(Stock stock, bool useVolumeChanges, bool useDebtRatio, bool useBuyBack)
 {
     std::cout << "S Analysis:" << std::endl;
 
     bool isVolumeChanged = true;
     bool isDebtReduced = true;
+    bool isBuyBack = true;
 
     if (useVolumeChanges) { isVolumeChanged = canslim::checkVolumeChanges(stock); }
     if (useDebtRatio) { isDebtReduced = canslim::checkDebtoToEquity(stock); }
+    if (useBuyBack) { isBuyBack = canslim::checkBuyBack(stock); }
 
-    return isVolumeChanged && isDebtReduced;
+    return isVolumeChanged && isDebtReduced && isBuyBack;
 }
 
 // Leader or laggard
+//TODO: Buy among the top two or three stocks in a strong industry group
 bool canslim::LAnalysis(Stock stock)
 {
 

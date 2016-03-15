@@ -31,6 +31,10 @@ namespace canslim
     // Used in S analysis
     bool checkDebtoToEquity(Stock& stock);
 
+    // Check if company is buying back its own stocks
+    // Used in S analysis
+    bool checkBuyBack(Stock& stock);
+
     // If accelerating, will check if the last three quarters have growths
     bool CAnalysis(bool useAccelerating = false, bool useAccelerating10 = false, bool useSalesGrowth = false, bool useQualityStock = false);
 
@@ -43,7 +47,7 @@ namespace canslim
     //bool NAnalysis();
 
     // Supply and demand, reducing its debt as a percent of equity
-    bool SAnalysis(Stock stock, bool = false, bool useDebtRatio = false);
+    bool SAnalysis(Stock stock, bool = false, bool useDebtRatio = false, bool useBuyBack = false);
 
     // Leader or laggard
     bool LAnalysis(Stock stock);
