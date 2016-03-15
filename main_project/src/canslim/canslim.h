@@ -32,7 +32,7 @@ namespace canslim
     bool checkDebtoToEquity(Stock& stock);
 
     // If accelerating, will check if the last three quarters have growths
-    bool CAnalysis(bool useAccelerating = false, bool useQualityStock = false);
+    bool CAnalysis(bool useAccelerating = false, bool useAccelerating10 = false, bool useSalesGrowth = false, bool useQualityStock = false);
 
     // if useFiveYears = false, check only 3 years
     bool AAnalysis(bool useFiveYears = false, bool useReturnOfEquity = false, bool useCashFlow = false);

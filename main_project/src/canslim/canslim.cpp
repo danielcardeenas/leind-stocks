@@ -40,7 +40,7 @@ double canslim::cashFlowAgainstEPSIncrease()
     return utils::diferentialIncrease(currentEPS.value, cashFlowPerShare.value);
 }
 
-// Very similar to cashFlowEPS against EPS, but this one is used in Quarerly analysis
+// Very similar to cashFlowEPS against EPS, but this one is used in Quarterly analysis
 // From: Inestopedia.com
 bool canslim::isQualityStock()
 {
@@ -142,33 +142,63 @@ bool canslim::checkDebtoToEquity(Stock& stock)
 // CANSLIM Call methods
 // ===========================================================================================================
 
-bool canslim::CAnalysis(bool useAccelerating, bool useQualityStock)
+// TODO: Find another strong stock in the same group to confirm the industry is good
+bool canslim::CAnalysis(bool useAccelerating, bool useAccelerating10, bool useSalesGrowth, bool useQualityStock)
 {
     std::cout << "C Analysis:" << std::endl;
 
     auto response = cpr::Get(cpr::Url{"https://api.myjson.com/bins/34m8d"}); // SF1/AAPL_EPS_MRQ
+    //auto response = cpr::Get(cpr::Url{"https://api.myjson.com/bins/114q3"}); // SF1/EFII_EPS_MRQ
     auto json = json::parse(response.text);
 
     data_stock thisQuarter(json["dataset"]["data"][0]);
     data_stock lastYearQuarter(json["dataset"]["data"][4]);
 
-    double diff = utils::diferentialIncrease(lastYearQuarter.value, thisQuarter.value);
-
-    // Needed if useAccelerating
-    data_stock secondPastQuarter(json["dataset"]["data"][1]);
-    data_stock thirdPastQuarter(json["dataset"]["data"][2]);
-
+    // First things first.
+    // Current quarterly EPS when compared to the prior year's same quarter
+    double diffQuarters = utils::diferentialIncrease(lastYearQuarter.value, thisQuarter.value);
 
     // Begin the validations
     // ===================================================================
+
+    // Search for acceleration over the last 3 quarters
     if (useAccelerating)
     {
+        // Needed if useAccelerating
+        data_stock secondPastQuarter(json["dataset"]["data"][1]);
+        data_stock thirdPastQuarter(json["dataset"]["data"][2]);
+
         bool isAccelerating = thisQuarter > secondPastQuarter && secondPastQuarter > thirdPastQuarter;
 
         if (isAccelerating) { std::cout << "Is accelerating!" << std::endl; }
         else { std::cout << "Is NOT accelerating!" << std::endl; return false; }
     }
 
+    // Search for an acceleration over the last 10 quarters
+    // 50% increase setted
+    if (useAccelerating10)
+    {
+        // Fill last 10 quarters
+        std::vector<data_stock> quarters10;
+        for (int i = 0; i < 10; ++i) { quarters10.push_back(data_stock(json["dataset"]["data"][i])); }
+
+        int acceleratingNeeded = 50; // Percent
+        bool isAccelerating = false;
+
+        for (int i = 0; i < 10; ++i)
+        {
+            if (utils::diferentialIncrease(quarters10[(i + 1)].value, quarters10[i].value) > acceleratingNeeded)
+            {
+                isAccelerating = true;
+                break;
+            }
+        }
+
+        if (isAccelerating) { std::cout << "Is accelerating10!" << std::endl; }
+        else { std::cout << "Is NOT accelerating10" << std::endl; return false; }
+    }
+
+    // From investopedia.com
     if (useQualityStock)
     {
         bool isQualityStock = canslim::isQualityStock();
@@ -177,8 +207,27 @@ bool canslim::CAnalysis(bool useAccelerating, bool useQualityStock)
         else { std::cout << "Is NOT quality stock" << std::endl; return false; }
     }
 
-    if (diff >= 25) { return false; }
-    else { return true; }
+    // Search for sales increase over 25%
+    if (useSalesGrowth)
+    {
+        auto response = cpr::Get(cpr::Url{"https://api.myjson.com/bins/55r17"}); // SF1/AAPL_REVENUE_MRQ
+        //auto response = cpr::Get(cpr::Url{"https://api.myjson.com/bins/4q3rf"}); // SF1/EFII_REVENUE_MRQ
+        auto json = json::parse(response.text);
+
+        data_stock thisQuarter(json["dataset"]["data"][0]);
+        data_stock secondQuarter(json["dataset"]["data"][1]);
+        data_stock thirdQuarter(json["dataset"]["data"][2]);
+        data_stock fourthQuarter(json["dataset"]["data"][3]);
+        data_stock priorQuarter(json["dataset"]["data"][4]);
+
+        std::cout << utils::diferentialIncrease(secondQuarter.value, thisQuarter.value) << std::endl;
+        std::cout << utils::diferentialIncrease(thirdQuarter.value, secondQuarter.value) << std::endl;
+        std::cout << utils::diferentialIncrease(fourthQuarter.value, thirdQuarter.value) << std::endl;
+        std::cout << utils::diferentialIncrease(priorQuarter.value, fourthQuarter.value) << std::endl;
+    }
+
+    if (diffQuarters >= 25) { return true; }
+    else { return false; }
 }
 
 bool canslim::AAnalysis(bool useFiveYears, bool useReturnOfEquity, bool useCashFlow)
