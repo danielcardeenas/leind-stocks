@@ -334,7 +334,7 @@ bool canslim::SAnalysis(Stock stock, bool useVolumeChanges, bool useDebtRatio, b
 
     if (useVolumeChanges) { isVolumeChanged = canslim::checkVolumeChanges(stock); }
     if (useDebtRatio) { isDebtReduced = canslim::checkDebtoToEquity(stock); }
-    if (useBuyBack) { isBuyBack = canslim::checkBuyBack(stock); }
+    //if (useBuyBack) { isBuyBack = canslim::checkBuyBack(stock); }
 
     return isVolumeChanged && isDebtReduced && isBuyBack;
 }
@@ -363,10 +363,12 @@ bool canslim::IAnalysis(Stock stock)
     stock.setMajorHoldersData(json["results"][0]["data"]);
 
     // Uncomment to verify results
-    //std::cout << stock.getPercentHeldByOwners() << std::endl;
-    //std::cout << stock.getPercentHeldByInstitutions() << std::endl;
-    //std::cout << stock.getPercentFloatHeldByInstitutions() << std::endl;
-    //std::cout << stock.getNumberOfInstitutionsHolding() << std::endl;
+    std::cout << stock.getPercentHeldByOwners() << std::endl;
+    std::cout << stock.getPercentHeldByInstitutions() << std::endl;
+    std::cout << stock.getPercentFloatHeldByInstitutions() << std::endl;
+    std::cout << stock.getNumberOfInstitutionsHolding() << std::endl;
+
+    if (stock.getNumberOfInstitutionsHolding() < 10) { std::cout << "Not enough institutions" << std::endl; return false; }
 
     return true;
 }

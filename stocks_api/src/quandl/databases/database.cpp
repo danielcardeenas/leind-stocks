@@ -5,6 +5,7 @@
 #include "utils.h"
 #include <fstream>
 #include <sstream>
+#include <limits>
 #include <quandl/databases/database.h>
 
 //==============================================================================
