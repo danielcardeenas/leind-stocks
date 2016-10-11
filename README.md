@@ -1,4 +1,4 @@
-# StockMarketAnalysis
+# leind-stocks
 
 ### What is this
 Evaluates each stock under NASDAQ using the CANSLIM algorithm
