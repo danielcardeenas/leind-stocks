@@ -1,9 +1,10 @@
 # StockMarketAnalysis
 
-[![Build Status](https://travis-ci.org/danielcardeenas/StockMarketAnalysis.svg?branch=master)](https://travis-ci.org/danielcardeenas/StockMarketAnalysis)
+### What is this
+Evaluates each stock under NASDAQ using the CANSLIM algorithm
 
-### Using Quandl now
+### Data:
+The data is taken/scraped from several websites and APIS suchs as Yahoo Finance, Quandl, etc..
 
-#### First part of analysis output:
-Stocks with C Growth above 25%
-<sub>(Only tested with stocks of BVM from A to C)</sub>
+### Usage:
+I'll add later how to build this project
