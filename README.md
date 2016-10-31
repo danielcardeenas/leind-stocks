@@ -7,8 +7,7 @@ This is an implementation of fundamental analysis explained in [this book](https
 The data is taken/scraped from several websites and APIS suchs as Yahoo Finance, Quandl, etc..
 
 ### Usage:
-_TODO_
-
+**_TODO_**
 <sub>I'll add later how to build and use this</sub>
 
 ### Log:
