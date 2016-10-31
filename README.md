@@ -7,7 +7,9 @@ This is an implementation of fundamental analysis explained in [this book](https
 The data is taken/scraped from several websites and APIS suchs as Yahoo Finance, Quandl, etc..
 
 ### Usage:
-I'll add later how to build this project
+_TODO_
+
+<sub>I'll add later how to build and use this</sub>
 
 ### Log:
 The following stocks passed all the filters in September 20, 2016
