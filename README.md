@@ -9,10 +9,10 @@ The data is taken/scraped from several websites and APIS suchs as Yahoo Finance,
 ### Usage:
 I'll add later how to build this project
 
-##### 1st test Results:
+### Log:
 The following stocks passed all the filters in September 20, 2016
-+ **AMZN** (Amazon) @ 760.44
-+ **EW** (Edwards Lifescience) @ 114.73
-+ **FB** (Facebook) @ 128
++ **`AMZN`** <sub>(Amazon)</sub> @ 760.44
++ **`EW`** <sub>(Edwards Lifescience)</sub> @ 114.73
++ **`FB`** <sub>(Facebook)</sub> @ 128
 
 ![alt text](http://i.imgur.com/tXgFais.png?1 "")
