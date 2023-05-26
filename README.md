@@ -1,4 +1,4 @@
-# leind-stocks [![Build Status](https://travis-ci.org/danielcardeenas/leind-stocks.svg?branch=master)](https://travis-ci.org/danielcardeenas/leind-stocks)
+# leind-stocks
 
 ### What is this
 This is an implementation of fundamental analysis explained in [this book](https://www.amazon.com/How-Make-Money-Stocks-Winning/dp/0071614133). Also known as **CANSLIM**
